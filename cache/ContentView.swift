@@ -45,6 +45,7 @@ struct ContentView: View {
             }
             .navigationDestination(for: UUID.self) { noteID in
                 NoteEditorView(noteID: noteID)
+                    .id(noteID)
             }
         }
     }

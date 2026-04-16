@@ -37,7 +37,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E4ABB8B12F01CF9300888855 /* cache.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cache.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4ABB8B12F01CF9300888855 /* Capache.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Capache.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4ABB8D02F01D8FA00888855 /* cacheWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = cacheWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4ABB8D22F01D8FA00888855 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E4ABB8D42F01D8FA00888855 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -117,7 +117,7 @@
 		E4ABB8B22F01CF9300888855 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E4ABB8B12F01CF9300888855 /* cache.app */,
+				E4ABB8B12F01CF9300888855 /* Capache.app */,
 				E4ABB8D02F01D8FA00888855 /* cacheWidgetExtension.appex */,
 			);
 			name = Products;
@@ -156,7 +156,7 @@
 			packageProductDependencies = (
 			);
 			productName = cache;
-			productReference = E4ABB8B12F01CF9300888855 /* cache.app */;
+			productReference = E4ABB8B12F01CF9300888855 /* Capache.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E4ABB8CF2F01D8FA00888855 /* cacheWidgetExtension */ = {
@@ -405,7 +405,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.johnstonliu.cache;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Capache;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -438,7 +438,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.johnstonliu.cache;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Capache;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
