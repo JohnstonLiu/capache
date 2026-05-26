@@ -99,7 +99,7 @@ final class NotesViewModel: ObservableObject {
             }
 
             guard !query.isEmpty else { return true }
-            if note.searchableText.localizedCaseInsensitiveContains(query) {
+            if "\(note.title)\n\(note.plainText)".localizedCaseInsensitiveContains(query) {
                 return true
             }
             if let folderID = note.folderID,
@@ -131,7 +131,12 @@ final class NotesViewModel: ObservableObject {
     }
 
     private nonisolated static func folderName(for id: UUID, in folders: [Folder]) -> String {
-        folders.first { $0.id == id }?.displayName ?? "Missing Folder"
+        guard let folder = folders.first(where: { $0.id == id }) else {
+            return "Missing Folder"
+        }
+
+        let trimmedName = folder.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedName.isEmpty ? "Untitled Folder" : trimmedName
     }
 
     func createNote(in scope: NoteListScope, syncEnabled: Bool) async -> UUID? {

@@ -20,6 +20,7 @@ Setup docs:
 
 - [Supabase setup](docs/SUPABASE.md)
 - [Mac distribution](docs/MAC_DISTRIBUTION.md)
+- [App Store submission brief](docs/APP_STORE_SUBMISSION.md)
 - [Privacy policy](docs/PRIVACY_POLICY.md)
 - [Terms of service](docs/TERMS_OF_SERVICE.md)
 - [Data protection model](docs/DATA_PROTECTION.md)

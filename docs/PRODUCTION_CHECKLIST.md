@@ -67,12 +67,22 @@
 
 ## App Testing
 
+- [x] Version bumped for major App Store release: 2.0.0 build 2.
+- [x] App Store submission copy prepared in `docs/APP_STORE_SUBMISSION.md`.
+- [x] App Store export options added in `ci/ExportOptions-AppStore.plist`.
+- [x] Local Release iOS archive succeeds.
+- [ ] Install iOS Distribution certificate or configure App Store Connect API-key signing.
+- [ ] Enable Push Notifications on the widget extension App ID for App Store provisioning.
+- [ ] App Store/TestFlight export succeeds.
+- [ ] TestFlight upload succeeds.
 - [x] Add unit and UI test targets so `xcodebuild test` can run in CI.
 - [x] Add GitHub Actions iOS test workflow.
+- [x] GitHub Actions iOS test workflow is green on `main`.
 - [x] iOS Simulator build passes.
 - [x] Mac Catalyst build passes.
 - [x] UI launch smoke test passes.
 - [x] Simulator upgrade test passed.
+- [x] Account deletion manually verified.
 - [ ] Physical iPhone upgrade test.
 - [ ] Mac app replacement upgrade test.
 - [ ] Offline create/edit/reconnect test.
