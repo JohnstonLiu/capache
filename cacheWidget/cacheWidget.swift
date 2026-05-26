@@ -38,17 +38,30 @@ struct cacheWidget: Widget {
     let kind: String = "cacheWidget"
 
     var body: some WidgetConfiguration {
-        let config = AppIntentConfiguration(kind: kind, intent: SelectNoteIntent.self, provider: Provider()) { entry in
+        widgetConfiguration
+    }
+
+    private var widgetConfiguration: some WidgetConfiguration {
+        let base = AppIntentConfiguration(kind: kind, intent: SelectNoteIntent.self, provider: Provider()) { entry in
             cacheWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Cache Note")
-        .description("Show a selected note.")
-        .supportedFamilies([.systemLarge])
-        .pushHandler(CacheWidgetPushHandler.self)
+            .configurationDisplayName("Cache Note")
+            .description("Show a selected note.")
+            .supportedFamilies([.systemLarge])
 
-        if #available(iOS 17.0, *) {
-            return config.contentMarginsDisabled()
+        #if compiler(>=6.3)
+        if #available(iOSApplicationExtension 26.0, *) {
+            return applyMargins(base.pushHandler(CacheWidgetPushHandler.self))
         }
-        return config
+        #endif
+
+        return applyMargins(base)
+    }
+
+    private func applyMargins<Configuration: WidgetConfiguration>(_ configuration: Configuration) -> some WidgetConfiguration {
+        if #available(iOS 17.0, *) {
+            return configuration.contentMarginsDisabled()
+        }
+        return configuration
     }
 }
