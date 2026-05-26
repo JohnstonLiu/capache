@@ -10,6 +10,7 @@ on:
 jobs:
   test:
     runs-on: macos-15
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -19,9 +20,17 @@ jobs:
 
       - name: Run tests
         run: |
+          set -eo pipefail
+          DESTINATION_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ { print $2; exit }')"
+          if [ -z "$DESTINATION_ID" ]; then
+            xcrun simctl list devices available
+            exit 1
+          fi
+
           xcodebuild test \
             -project cache.xcodeproj \
             -scheme cache \
             -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 17,OS=latest" \
-            -derivedDataPath "$PWD/build/DerivedData"
+            -destination "id=$DESTINATION_ID" \
+            -derivedDataPath "$PWD/build/DerivedData" \
+            -parallel-testing-enabled NO
