@@ -1,0 +1,13 @@
+project_id = "ttcunbsexewigsgvjqkp"
+
+[functions.delete-user]
+verify_jwt = true
+
+[functions.send-widget-refresh]
+verify_jwt = true
+
+[functions.widget-note-snapshot]
+verify_jwt = false
+
+[functions.widget-register-push-token]
+verify_jwt = false

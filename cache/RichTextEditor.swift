@@ -32,11 +32,19 @@ struct RichTextEditor: UIViewRepresentable {
         textView.delegate = context.coordinator
         textView.font = UIFont.systemFont(ofSize: RichTextCodec.baseFontSize)
         textView.backgroundColor = .clear
-        textView.allowsEditingTextAttributes = true
+        textView.textContentType = nil
+        textView.allowsEditingTextAttributes = false
         textView.isSelectable = true
         textView.alwaysBounceVertical = true
         textView.textContainerInset = UIEdgeInsets(top: 12, left: 8, bottom: 12, right: 8)
         textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+#if targetEnvironment(macCatalyst)
+        textView.autocorrectionType = .no
+        textView.spellCheckingType = .no
+        textView.smartDashesType = .no
+        textView.smartQuotesType = .no
+        textView.smartInsertDeleteType = .no
+#endif
         return textView
     }
 
@@ -56,9 +64,11 @@ struct RichTextEditor: UIViewRepresentable {
             }
         }
 
+#if !targetEnvironment(macCatalyst)
         if isFocused, !uiView.isFirstResponder {
             uiView.becomeFirstResponder()
         }
+#endif
     }
 
     final class Coordinator: NSObject, UITextViewDelegate {
@@ -75,11 +85,15 @@ struct RichTextEditor: UIViewRepresentable {
             parent.onChange(textView.attributedText)
         }
 
-        func textViewDidChangeSelection(_ textView: UITextView) {
-            if textView.isFirstResponder == false, parent.isFocused {
-                textView.becomeFirstResponder()
-            }
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            parent.isFocused = true
+        }
 
+        func textViewDidEndEditing(_ textView: UITextView) {
+            parent.isFocused = false
+        }
+
+        func textViewDidChangeSelection(_ textView: UITextView) {
             let range = textView.selectedRange
             if range.length == 0, textView.attributedText.length > 0 {
                 let index = max(range.location - 1, 0)

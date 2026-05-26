@@ -13,28 +13,29 @@ struct Provider: AppIntentTimelineProvider {
         NoteEntry(
             date: Date(),
             configuration: SelectNoteIntent(),
-            note: Note(id: UUID(), attributedText: NSAttributedString(string: "Jot something quick..."), updatedAt: Date()),
+            note: Note(id: UUID(), title: "Quick Note", attributedText: NSAttributedString(string: "Jot something quick..."), updatedAt: Date()),
             isMissingSelection: false
         )
     }
 
     func snapshot(for configuration: SelectNoteIntent, in context: Context) async -> NoteEntry {
-        let result = loadNote(from: configuration)
+        let result = await loadNote(from: configuration)
         return NoteEntry(date: Date(), configuration: configuration, note: result.note, isMissingSelection: result.isMissingSelection)
     }
 
     func timeline(for configuration: SelectNoteIntent, in context: Context) async -> Timeline<NoteEntry> {
-        let result = loadNote(from: configuration)
+        let result = await loadNote(from: configuration)
         let entry = NoteEntry(date: Date(), configuration: configuration, note: result.note, isMissingSelection: result.isMissingSelection)
-        let refresh = Date().addingTimeInterval(60 * 15)
+        let refresh = Date().addingTimeInterval(60 * 5)
         return Timeline(entries: [entry], policy: .after(refresh))
     }
 
-    private func loadNote(from configuration: SelectNoteIntent) -> (note: Note?, isMissingSelection: Bool) {
+    private func loadNote(from configuration: SelectNoteIntent) async -> (note: Note?, isMissingSelection: Bool) {
         guard let id = configuration.note?.id else {
             return (note: nil, isMissingSelection: false)
         }
-        let note = SharedStore.shared.getNote(id: id)
+
+        let note = await WidgetBackgroundRefreshClient.refreshNote(id: id) ?? SharedStore.shared.getNote(id: id)
         return (note: note, isMissingSelection: note == nil)
     }
 }

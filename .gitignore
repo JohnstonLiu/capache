@@ -1,2 +1,7 @@
 .DS_Store
 xcuserdata/
+build/
+DerivedData/
+*.xcarchive
+.env
+supabase/.temp/

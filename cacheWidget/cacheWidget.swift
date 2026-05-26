@@ -44,6 +44,7 @@ struct cacheWidget: Widget {
         .configurationDisplayName("Cache Note")
         .description("Show a selected note.")
         .supportedFamilies([.systemLarge])
+        .pushHandler(CacheWidgetPushHandler.self)
 
         if #available(iOS 17.0, *) {
             return config.contentMarginsDisabled()

@@ -1,0 +1,71 @@
+name: Mac Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: macos-15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Import Developer ID certificate
+        env:
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          echo "$MACOS_CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+          rm certificate.p12
+
+      - name: Archive Mac Catalyst app
+        run: |
+          xcodebuild archive \
+            -project cache.xcodeproj \
+            -scheme cache \
+            -configuration Release \
+            -destination "generic/platform=macOS,variant=Mac Catalyst" \
+            -archivePath "$PWD/build/Capache.xcarchive" \
+            SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
+            SUPABASE_PUBLISHABLE_KEY="${{ secrets.SUPABASE_PUBLISHABLE_KEY }}"
+
+      - name: Export Developer ID app
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath "$PWD/build/Capache.xcarchive" \
+            -exportOptionsPlist ci/ExportOptions-DeveloperID.plist \
+            -exportPath "$PWD/build/export"
+
+      - name: Notarize and staple
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          TEAM_ID: 7MJ85SMX63
+        run: |
+          ditto -c -k --keepParent "$PWD/build/export/Capache.app" "$PWD/build/Capache-notary.zip"
+          xcrun notarytool submit "$PWD/build/Capache-notary.zip" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --team-id "$TEAM_ID" \
+            --wait
+          xcrun stapler staple "$PWD/build/export/Capache.app"
+          ditto -c -k --keepParent "$PWD/build/export/Capache.app" "$PWD/build/Capache-mac.zip"
+
+      - name: Upload GitHub release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/Capache-mac.zip
