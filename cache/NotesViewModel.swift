@@ -77,7 +77,7 @@ final class NotesViewModel: ObservableObject {
         Self.visibleNotes(notes, folders: folders, for: scope, searchText: searchText)
     }
 
-    static func visibleNotes(
+    nonisolated static func visibleNotes(
         _ notes: [Note],
         folders: [Folder],
         for scope: NoteListScope,
@@ -130,7 +130,7 @@ final class NotesViewModel: ObservableObject {
         }
     }
 
-    private static func folderName(for id: UUID, in folders: [Folder]) -> String {
+    private nonisolated static func folderName(for id: UUID, in folders: [Folder]) -> String {
         folders.first { $0.id == id }?.displayName ?? "Missing Folder"
     }
 
