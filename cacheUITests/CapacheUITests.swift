@@ -29,12 +29,12 @@ final class CapacheUITests: XCTestCase {
             ]
 
             if let hittable = candidates.first(where: { $0.exists && $0.isHittable }) {
-                hittable.tap()
+                tapElement(hittable)
                 return
             }
 
             if let existing = candidates.first(where: { $0.exists }) {
-                existing.tap()
+                tapElement(existing)
                 return
             }
 
@@ -42,6 +42,15 @@ final class CapacheUITests: XCTestCase {
         } while Date() < deadline
 
         XCTFail("Could not find control named \(label)", file: file, line: line)
+    }
+
+    private func tapElement(_ element: XCUIElement) {
+        if element.isHittable {
+            element.tap()
+            return
+        }
+
+        element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     func testAppLaunchesToNotesList() {
@@ -65,7 +74,7 @@ final class CapacheUITests: XCTestCase {
 
         let noteActionsButton = app.buttons["Note Actions"]
         XCTAssertTrue(noteActionsButton.waitForExistence(timeout: 5))
-        noteActionsButton.tap()
+        tapElement(noteActionsButton)
 
         XCTAssertTrue(app.buttons["History"].waitForExistence(timeout: 3))
     }
